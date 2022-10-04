@@ -6,20 +6,23 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
-@Document(collection="cartao")
+@Document(collection = "cartao")
 @Getter
 @Setter
-public class Cartao implements Serializable{
+public class Cartao implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
-	private String id;
+    @Id
+    private String id;
+    private String senha;
+    private BigDecimal saldo;
 
-	private String nome;
-
-	private String senha;
-
-	private String saldo;
+    public Cartao(String id, String senha, BigDecimal saldo) {
+        this.id = id;
+        this.senha = senha;
+        this.saldo = saldo;
+    }
 }

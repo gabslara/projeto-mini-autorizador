@@ -1,35 +1,54 @@
 package br.com.autorizador.controller;
 
 import br.com.autorizador.exception.GenericBusinessException;
-import br.com.autorizador.model.response.ErrorResponse;
+import br.com.autorizador.model.Request.CartaoRequest;
+import br.com.autorizador.model.Request.TransacaoRequest;
+import br.com.autorizador.model.response.CartaoResponse;
 import br.com.autorizador.services.AutorizadorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
 
 @Api(value = "API AUTORIZADOR")
 @RestController
-@RequestMapping("/api/autorizador/v1")
+@RequestMapping("v1/autorizador")
 public class AutorizadorController {
 
     @Autowired
     private AutorizadorService service;
 
-    @ApiResponses(value = {
-            @ApiResponse(code = 422, message = "Não autorizado.", response = ErrorResponse.class)
-    })
     @ApiOperation(value = "Criar Cartão")
-    @PostMapping("/{id}")
-    public ResponseEntity<?> insert(@PathVariable("id") String id) {
+    @PostMapping(path = "/cartoes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CartaoResponse> criarCartao(@Valid @RequestBody CartaoRequest request) throws GenericBusinessException {
 
-        return ResponseEntity.ok().build();
+        var response = service.criarCartao(request);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @ApiOperation(value = "Obter saldo do Cartão")
+    @GetMapping(path = "/cartoes/{numeroCartao}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BigDecimal> obterSaldo(@Valid @PathVariable String numeroCartao) throws GenericBusinessException {
+
+        var response = service.obterSaldo(numeroCartao);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "Realizar uma Transação")
+    @PostMapping(path = "/transacoes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> autorizar(@Valid @RequestBody TransacaoRequest request) throws GenericBusinessException {
+
+        service.autorizar(request);
+
+        return new ResponseEntity<>("Ok", HttpStatus.CREATED);
     }
 
 }

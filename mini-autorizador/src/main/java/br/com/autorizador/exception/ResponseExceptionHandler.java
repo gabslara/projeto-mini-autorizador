@@ -1,10 +1,11 @@
 package br.com.autorizador.exception;
 
-import br.com.autorizador.model.response.ErrorResponse;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,22 +16,30 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String ERRO_EXCEPTION = "Mensagem de erro: {}, exceção: () ";
+    private static final String ERRO_REQUISICAO = "Parâmetros inválidos";
 
     @ResponseBody
     @ExceptionHandler(GenericBusinessException.class)
     public ResponseEntity<Object> handleGenericBusinessException(
-            GenericBusinessException ex, WebRequest request){
+            GenericBusinessException ex, WebRequest request) {
         return getObjectResponseGeneric(ex, request);
     }
 
-    private ResponseEntity<Object> getObjectResponseGeneric(GenericBusinessException ex, WebRequest request){
+    private ResponseEntity<Object> getObjectResponseGeneric(GenericBusinessException ex, WebRequest request) {
 
-        var error = ErrorResponse.builder()
-                .status(ex.getStatus().value())
-                .body(ex.getMessage())
-                .build();
+        Object body = null;
 
-        return handleExceptionInternal(ex, error, new HttpHeaders(), ex.getStatus(), request);
+        if (ex.getBody() != null) {
+            body = ex.getBody();
+        }
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), ex.getStatus(), request);
+    }
+
+    @Override
+    public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers,
+                                                               HttpStatus status, WebRequest request) {
+
+        return handleExceptionInternal(ex, ERRO_REQUISICAO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }

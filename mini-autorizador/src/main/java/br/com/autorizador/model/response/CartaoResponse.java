@@ -2,19 +2,16 @@ package br.com.autorizador.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.Getter;
 import java.io.Serializable;
-@Data
-@NoArgsConstructor
+
+@Getter
 @Builder
 @AllArgsConstructor
-public class ErrorResponse implements Serializable{
+public class CartaoResponse implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
-	private int status;
-	private String body;
-
+	private String numeroCartao;
+	private String senha;
 }

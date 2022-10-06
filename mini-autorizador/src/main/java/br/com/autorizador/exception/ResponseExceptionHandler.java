@@ -1,5 +1,6 @@
 package br.com.autorizador.exception;
 
+import br.com.autorizador.model.enums.ErroAutorizacaoEnum;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -27,10 +28,14 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Object> getObjectResponseGeneric(GenericBusinessException ex, WebRequest request) {
 
-        Object body = null;
+        Object body = ex.getBody();
 
-        if (ex.getBody() != null) {
-            body = ex.getBody();
+        if (body == null && ex.getMessage() != null) {
+            try {
+                body = ErroAutorizacaoEnum.valueOf(ex.getMessage());
+            } catch (IllegalArgumentException e) {
+                body = new Object[]{ex.getMessage()};
+            }
         }
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), ex.getStatus(), request);

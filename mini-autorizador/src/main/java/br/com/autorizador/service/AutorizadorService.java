@@ -1,4 +1,4 @@
-package br.com.autorizador.services;
+package br.com.autorizador.service;
 
 import br.com.autorizador.exception.GenericBusinessException;
 import br.com.autorizador.model.Request.CartaoRequest;

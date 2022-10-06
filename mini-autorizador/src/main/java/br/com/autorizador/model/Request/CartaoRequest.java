@@ -1,12 +1,13 @@
 package br.com.autorizador.model.Request;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
+@Builder
 public class CartaoRequest implements Serializable{
 
 	private static final long serialVersionUID = 1L;

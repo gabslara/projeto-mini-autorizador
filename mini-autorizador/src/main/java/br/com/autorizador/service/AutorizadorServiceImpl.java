@@ -1,4 +1,4 @@
-package br.com.autorizador.services;
+package br.com.autorizador.service;
 
 import br.com.autorizador.exception.GenericBusinessException;
 import br.com.autorizador.model.Request.CartaoRequest;
@@ -71,12 +71,12 @@ public class AutorizadorServiceImpl implements AutorizadorService {
         log.info(MSG_INICIO_METODO_LOG, "autorizar", this.getClass().getName());
 
         log.info("Verificando se o cartão existe");
-        var cartao = repository.findById(request.getNumeroCartao()).orElseThrow(() -> new GenericBusinessException(HttpStatus.NOT_FOUND, ErroAutorizacaoEnum.CARTAO_INEXISTENTE));
+        var cartao = repository.findById(request.getNumeroCartao()).orElseThrow(() -> new GenericBusinessException(HttpStatus.NOT_FOUND, ErroAutorizacaoEnum.CARTAO_INEXISTENTE.toString()));
 
         log.info("Validando a senha informada");
         if (!cartao.getSenha().equals(request.getSenha())) {
             log.error("Erro: {}", ErroAutorizacaoEnum.SENHA_INVALIDA);
-            throw new GenericBusinessException(HttpStatus.UNPROCESSABLE_ENTITY, ErroAutorizacaoEnum.SENHA_INVALIDA);
+            throw new GenericBusinessException(HttpStatus.UNPROCESSABLE_ENTITY, ErroAutorizacaoEnum.SENHA_INVALIDA.toString());
         }
 
         log.info("Obtendo o saldo");
@@ -86,7 +86,7 @@ public class AutorizadorServiceImpl implements AutorizadorService {
             repository.save(cartao);
         } else {
             log.error("Erro: {}", ErroAutorizacaoEnum.SALDO_INSUFICIENTE);
-            throw new GenericBusinessException(HttpStatus.UNPROCESSABLE_ENTITY, ErroAutorizacaoEnum.SALDO_INSUFICIENTE);
+            throw new GenericBusinessException(HttpStatus.UNPROCESSABLE_ENTITY, ErroAutorizacaoEnum.SALDO_INSUFICIENTE.toString());
         }
         log.info(MSG_FIM_METODO_LOG, "autorizar", this.getClass().getName());
     }

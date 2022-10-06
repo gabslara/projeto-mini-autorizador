@@ -4,7 +4,7 @@ import br.com.autorizador.exception.GenericBusinessException;
 import br.com.autorizador.model.Request.CartaoRequest;
 import br.com.autorizador.model.Request.TransacaoRequest;
 import br.com.autorizador.model.response.CartaoResponse;
-import br.com.autorizador.services.AutorizadorService;
+import br.com.autorizador.service.AutorizadorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class AutorizadorController {
 
         service.autorizar(request);
 
-        return new ResponseEntity<>("Ok", HttpStatus.CREATED);
+        return new ResponseEntity<>("OK", HttpStatus.CREATED);
     }
 
 }

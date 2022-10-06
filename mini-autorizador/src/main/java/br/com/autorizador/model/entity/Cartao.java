@@ -1,6 +1,7 @@
 package br.com.autorizador.model.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Document(collection = "cartao")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Cartao implements Serializable {
 
     private static final long serialVersionUID = 1L;
